@@ -617,7 +617,11 @@ void setupEthernetAndZigbeeSerial()
   case 2:
     if (ETH.begin(ETH_ADDR_2, ETH_POWER_PIN_2, ETH_MDC_PIN_2, ETH_MDIO_PIN_2, ETH_TYPE_2, ETH_CLK_MODE_2))
     {
+#ifdef HMG_01
+      String boardName = "HMG-01 POE Plus";
+#else
       String boardName = "TTGO T-Internet-POE";
+#endif
       boardName.toCharArray(ConfigSettings.boardName, sizeof(ConfigSettings.boardName));
       DEBUG_PRINT(F("Board - "));
       DEBUG_PRINTLN(boardName);
@@ -628,7 +632,9 @@ void setupEthernetAndZigbeeSerial()
       DEBUG_PRINTLN(ConfigSettings.serialSpeed);
       Serial2.begin(ConfigSettings.serialSpeed, SERIAL_8N1, ZRXD_2, ZTXD_2);
 
+#ifndef HMG_01
       oneWireBegin();
+#endif
     }
     else
     {
@@ -672,7 +678,9 @@ void setupEthernetAndZigbeeSerial()
       DEBUG_PRINTLN(ConfigSettings.serialSpeed);
       Serial2.begin(ConfigSettings.serialSpeed, SERIAL_8N1, ZRXD_4, ZTXD_4);
 
+#ifndef HMG_01
       oneWireBegin();
+#endif
     }
     else
     {
@@ -817,7 +825,16 @@ void setup(void)
   pinMode(ConfigSettings.flashZigbeePin, OUTPUT);
   digitalWrite(ConfigSettings.rstZigbeePin, 1);
   digitalWrite(ConfigSettings.flashZigbeePin, 1);
-
+#ifdef HMG_01
+  pinMode(LED_PWR, OUTPUT);
+  pinMode(LED_USB, OUTPUT);
+  pinMode(BTN, INPUT);
+  pinMode(MODE_SWITCH, OUTPUT);
+  digitalWrite(MODE_SWITCH, 0);// Switched UZG-01 to LAN mode
+  digitalWrite(LED_PWR, 0);
+  digitalWrite(LED_USB, 0);
+#endif
+  
   ConfigSettings.disconnectEthTime = millis();
   ETH.setHostname(ConfigSettings.hostname);
 
