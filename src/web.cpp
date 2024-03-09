@@ -628,6 +628,7 @@ void handleRoot()
 
     
     if (ConfigSettings.board == 2) {
+#ifndef HMG_01
       String OWWstrg;
       float temp_ow = oneWireRead();
 
@@ -640,6 +641,7 @@ void handleRoot()
       {
         result.replace("{{dsTemp}}", "");
       }
+#endif
     }
     else
     {
