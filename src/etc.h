@@ -9,8 +9,10 @@ uint8_t temprature_sens_read();
 #endif
 uint8_t temprature_sens_read();
 
+#ifndef HMG_01
 void oneWireBegin();
 float oneWireRead();
+#endif
 
 float getCPUtemp(bool clear = false);
 
