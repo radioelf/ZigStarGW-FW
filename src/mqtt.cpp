@@ -105,7 +105,7 @@ void mqttPublishState()
     float CPUtemp = getCPUtemp();
     root["temperature"] = String(CPUtemp);
 
-    
+#ifndef HMG_01    
     //if (ConfigSettings.board == 2) {
         //String OWWstrg;
     float temp_OW = oneWireRead();
@@ -116,7 +116,7 @@ void mqttPublishState()
         root["ow_temperature"] = NULL;
     }
     //}
-    
+#endif    
     root["connections"] = ConfigSettings.connectedClients;
     
     if (ConfigSettings.connectedEther)
@@ -256,7 +256,11 @@ void mqttPublishDiscovery()
     DynamicJsonDocument via(1024);
     via["ids"] = ETH.macAddress();
 
+#ifndef HMG_01
     int lastAutoMsg = 10;
+#else
+	int lastAutoMsg = 9;
+#endif
     //if (ConfigSettings.board == 2) lastAutoMsg--;
 
     for (int i = 0; i <= lastAutoMsg; i++)
@@ -409,6 +413,7 @@ void mqttPublishDiscovery()
                 buffJson["dev"] = via;
                 break;
             }
+#ifndef HMG_01
             case 10:
             {
                 topic = "homeassistant/sensor/" + deviceName + "/ow_temperature/config";
@@ -425,7 +430,9 @@ void mqttPublishDiscovery()
                 buffJson["unit_of_meas"] = "°C";
                 break;
             }
+#endif
         }
+#ifndef HMG_01
         if (i == 10) {
             //if (ConfigSettings.board == 2) {
             float temp_OW = oneWireRead();
@@ -437,6 +444,7 @@ void mqttPublishDiscovery()
             //    break;
             //}
         }
+#endif
         serializeJson(buffJson, mqttBuffer);
         //DEBUG_PRINTLN(mqttBuffer);
         mqttPublishMsg(topic, mqttBuffer, true);
