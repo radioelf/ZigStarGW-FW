@@ -11,15 +11,17 @@
 #include "mqtt.h"
 #include "web.h"
 
+#ifndef HMG_01
 #include <OneWire.h>
 #include <DS18B20.h>
 
 OneWire ds(ONE_WIRE_BUS);
 
 DS18B20 sensor(&ds);
+#endif
 
 extern struct ConfigSettingsStruct ConfigSettings;
-
+#ifndef HMG_01
 void oneWireBegin()
 {
   sensor.begin();
@@ -48,7 +50,7 @@ float oneWireRead()
       return false;
   }
 }
-
+#endif
 void getReadableTime(String &readableTime, unsigned long beginTime)
 {
   unsigned long currentMillis;
